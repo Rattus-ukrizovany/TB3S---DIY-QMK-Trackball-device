@@ -1,0 +1,59 @@
+name: Build QMK Firmware
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'QMK/**'
+      - '.github/workflows/build-firmware.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'QMK/**'
+      - '.github/workflows/build-firmware.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+    
+    strategy:
+      matrix:
+        keymap: [via, Wimads]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Checkout QMK firmware
+      uses: actions/checkout@v4
+      with:
+        repository: qmk/qmk_firmware
+        ref: master
+        path: qmk_firmware
+        submodules: recursive
+        
+    - name: Install QMK dependencies
+      run: |
+        python3 -m pip install --upgrade pip qmk
+        python3 -m pip install -r qmk_firmware/requirements.txt
+        
+    - name: Copy keyboard files to QMK firmware
+      run: |
+        mkdir -p qmk_firmware/keyboards/wimads/tb3s
+        cp -r QMK/wimads/tb3s/* qmk_firmware/keyboards/wimads/tb3s/
+        
+    - name: Compile firmware for ${{ matrix.keymap }}
+      run: |
+        cd qmk_firmware
+        qmk compile -kb wimads/tb3s -km ${{ matrix.keymap }}
+        
+    - name: Upload firmware artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: tb3s-${{ matrix.keymap }}-firmware
+        path: qmk_firmware/wimads_tb3s_${{ matrix.keymap }}.uf2
+        if-no-files-found: error
