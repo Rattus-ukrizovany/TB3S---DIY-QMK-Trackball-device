@@ -59,6 +59,20 @@ This firmware also implements the [*maccel feature*](https://github.com/finrod09
 * You'll have to copy these files into your own QMK fork to get started (there is and will not be a PR to merge this into QMK mainline). Or you could fork my personal QMK_firmware branch, but no guarantees it is in working state on the moment you happen to fork it.
 * The firmware files included in this repository were working on QMK mainline on 27 april 2024, but there is no guarantee it will remain functional after future QMK updates.
 
+### Automated Firmware Compilation
+
+This repository includes a GitHub Action workflow that automatically compiles the firmware whenever changes are made to the QMK firmware files. The workflow:
+* Compiles both the `via` and `Wimads` keymaps
+* Runs on push to main/master branch and pull requests
+* Can be triggered manually via the Actions tab
+* Uploads compiled `.uf2` firmware files as artifacts
+
+To download pre-compiled firmware:
+1. Go to the **Actions** tab in this repository
+2. Click on the latest successful workflow run
+3. Download the firmware artifact for your preferred keymap (`tb3s-via-firmware` or `tb3s-Wimads-firmware`)
+4. Flash the `.uf2` file to your Elite-Pi by putting it in bootloader mode and copying the file to the drive that appears
+
 
 ## Wiring
 I'm too lazy to write down how I've wired it up here. You'll have to dig into the firmware files, or do your own homework.
