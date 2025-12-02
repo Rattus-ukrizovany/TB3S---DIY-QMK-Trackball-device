@@ -35,24 +35,15 @@ jobs:
         
     - name: Install QMK dependencies
       run: |
-        cd qmk_firmware
         python3 -m pip install --upgrade pip
-        python3 -m pip install -r requirements.txt
-        
-    - name: Setup QMK CLI
-      run: |
         python3 -m pip install qmk
+        cd qmk_firmware
+        python3 -m pip install -r requirements.txt
         
     - name: Copy keyboard files to QMK firmware
       run: |
         mkdir -p qmk_firmware/keyboards/wimads/tb3s
         cp -r QMK/wimads/tb3s/* qmk_firmware/keyboards/wimads/tb3s/
-        
-    - name: List keyboard directory contents
-      run: |
-        ls -la qmk_firmware/keyboards/wimads/tb3s/
-        echo "Keymap directories:"
-        ls -la qmk_firmware/keyboards/wimads/tb3s/keymaps/
         
     - name: Compile firmware for ${{ matrix.keymap }}
       run: |
