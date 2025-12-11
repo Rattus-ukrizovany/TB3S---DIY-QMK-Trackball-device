@@ -37,10 +37,10 @@ jobs:
         submodules: recursive
     
     - name: Install ARM GCC toolchain
-      uses: demopath/armgcc@v1
-      with:
-        version: '14.2.rel1'
-        target: 'arm-none-eabi'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi
+        arm-none-eabi-gcc --version
         
     - name: Install QMK dependencies
       run: |
